@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Download Output Files</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+        background: linear-gradient(135deg, #c3ecb2, #a4e5e0);
+      }
+      .output-container {
+        background-color: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        width: 400px;
+        max-height: calc(100dvh - 40px);
+        overflow-y: auto;
+      }
+      .output-container h1 {
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+      }
+      .output-container ul {
+        list-style: none;
+        padding: 0;
+      }
+      .output-container ul li {
+        margin: 10px 0;
+        font-size: 16px;
+      }
+      .output-container a {
+        text-decoration: none;
+        color: #007bff;
+      }
+      .output-container a:hover {
+        text-decoration: underline;
+      }
+      .output-container button {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+      }
+      .output-container button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="output-container">
+      <h1>Output Files</h1>
+      <button id="loadFilesButton">Load Files</button>
+      <ul id="fileList"></ul>
+    </div>
+
+    <script>
+      document
+        .getElementById("loadFilesButton")
+        .addEventListener("click", async () => {
+            const fileList = document.getElementById("fileList");
+            fileList.innerHTML = "<li>Loading...</li>";
+            
+            try {
+                const response = await fetch("http://localhost:4000/output-files-api");
+                
+                console.log("Prev");
+                if (!response.ok) {
+                    console.log("Not ok");
+                    
+                    throw new Error(await response.text());
+                }
+                
+                const data = await response.json();
+                console.log("Next", data);
+            fileList.innerHTML = "";
+
+            if (data.files.length > 0) {
+              data.files.forEach((file) => {
+                const listItem = document.createElement("li");
+                const downloadLink = document.createElement("a");
+                downloadLink.href = `http://localhost:4000/output/${file}`;
+                downloadLink.textContent = file;
+                downloadLink.download = file;
+                listItem.appendChild(downloadLink);
+                fileList.appendChild(listItem);
+              });
+            } else {
+              fileList.innerHTML = "<li>No files found.</li>";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            fileList.innerHTML = "<li>Error loading files.</li>";
+          }
+        });
+    </script>
+  </body>
+</html>

@@ -8,6 +8,7 @@ import Docxtemplater from "docxtemplater";
 import numberToWords from "./words.js";
 import path from "path";
 import { fileURLToPath } from "url";
+
 let absoluteFilePath;
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
@@ -23,28 +24,54 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); 
+});
 app.listen(4000, () => {
   console.log("listening to port 4000");
 });
 
-app.get('/output', (req,res)=>{
-  const output= './output'
-  if(!fs.existsSync(output))
-  {
-    return res.status(404).send("No file Found")
-  }
-  fs.readdir(output, (err,files)=>{
-      if(err){
-        console.error("Error reading file ", err)
-        return res.status(500).send('Error reading output folder.');
-      }
-      res.status(200).json({
-        files:files,
-        message:`${files.length} file(s) found`
-      })
-  })
+app.get('/output', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'output.html'));
   
-})
+}); 
+app.get('/output-files-api', (req, res) => {
+  const outputDir = "./output";
+  const filesArray = []
+  if (!fs.existsSync(outputDir)) {
+    console.log("Output folder does not exist. Nothing to delete.");
+    return;
+  }
+
+  const files = fs.readdirSync(outputDir);
+
+  files.forEach((file) => {
+   // const filePath = path.join(outputDir, file);
+    console.log({outputDir, file})
+    try {
+      filesArray.push(file);
+      console.log(`Deleted file: ${file}`);
+    } catch (err) {
+      console.error(`Error deleting file ${file}:`, err);
+    }
+  }); 
+  res.send({status:200, files: filesArray})
+  console.log("All files in the output folder have been deleted.");
+  
+});
+
+app.get('/output/:filename', (req, res) => {
+  const outputDir = './output';
+  const filePath = path.join(outputDir, req.params.filename);
+  if (!fs.existsSync(filePath)) {
+      return res.status(404).send('File not found');
+  }
+  res.download(filePath); 
+});
+
 
 app.post("/upload", upload.single("file"), async (req, res) => {
   deleteFilesInOutputFolderSync();
@@ -142,8 +169,8 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         }
       } else console.log("nothing");
     }
-
-    res.json("ok");
+    console.log("Redirecting to /output");
+    res.redirect('/output')
   } catch (error) {
     console.error("Error reading file :", error.message);
   }
