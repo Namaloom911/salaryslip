@@ -8,7 +8,14 @@ import Docxtemplater from "docxtemplater";
 import numberToWords from "./words.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from 'cors'
+import dotenv from "dotenv"
 
+const corsOptions = {
+  origin: '*', // Allow only requests from this origin
+  methods: 'GET,POST', // Allow only these methods
+  allowedHeaders: ['Content-Type', 'Authorization'] // Allow only these headers
+};
 let absoluteFilePath;
 if (!fs.existsSync("uploads")) {
   fs.mkdirSync("uploads");
@@ -24,8 +31,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 const app = express();
+dotenv.config()
+app.use(cors(corsOptions))
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+console.log({proc: process.env.BACKEND_URL});
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html')); 
@@ -103,7 +113,7 @@ app.post("/upload", upload.single("file"), async (req, res) => {
         let bonus = result.Bonus || 0;
         let cms = result.Comission || 0;
         let tip = result.Tip || 0;
-        let gr = result.Google;
+        let gr = result.Google || 0;
         let tpr = result.Trust_Pilot || 0;
 
         let tax = result.tax || 0;

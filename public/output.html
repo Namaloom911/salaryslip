@@ -74,7 +74,7 @@
             fileList.innerHTML = "<li>Loading...</li>";
             
             try {
-                const response = await fetch("http://localhost:4000/output-files-api");
+                const response = await fetch(`${process.env.BACKEND_URL}/output-files-api`);
                 
                 console.log("Prev");
                 if (!response.ok) {
@@ -91,7 +91,7 @@
               data.files.forEach((file) => {
                 const listItem = document.createElement("li");
                 const downloadLink = document.createElement("a");
-                downloadLink.href = `http://localhost:4000/output/${file}`;
+                downloadLink.href = `${process.env.BACKEND_URL}/output/${file}`;
                 downloadLink.textContent = file;
                 downloadLink.download = file;
                 listItem.appendChild(downloadLink);
