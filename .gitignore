@@ -1,0 +1,18 @@
+# Node.js
+node_modules/
+
+# Logs
+*.log
+
+# Debug files
+.vscode/
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# npm package lock
+package-lock.json
+
+# Environment variables
+.env
