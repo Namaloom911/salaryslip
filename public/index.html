@@ -68,7 +68,7 @@
     formData.append('file', fileInput.files[0]);
 
     try {
-        const response = await fetch('http://localhost:4000/upload', {
+        const response = await fetch('https://salaryslip.vercel.app/upload', {
             method: 'POST',
             body: formData
         });
