@@ -190,7 +190,7 @@ function deleteFilesInOutputFolderSync() {
   const outputDir = "./output";
 
   if (!fs.existsSync(outputDir)) {
-    console.log("Output folder does not exist. Nothing to delete.");
+    console.log("Post_Request Output folder does not exist. Nothing to delete.");
     return;
   }
 
@@ -200,14 +200,40 @@ function deleteFilesInOutputFolderSync() {
     const filePath = path.join(outputDir, file);
     try {
       fs.unlinkSync(filePath);
-      console.log(`Deleted file: ${file}`);
+      console.log(`Post_Request Deleted file: ${file}`);
     } catch (err) {
-      console.error(`Error deleting file ${file}:`, err);
+      console.error(`Post_Request Error deleting file ${file}:`, err);
     }
   });
 
-  console.log("All files in the output folder have been deleted.");
+  console.log("Post_Request All files in the output folder have been deleted.");
 }
-deleteFilesInOutputFolderSync();
+//deleteFilesInOutputFolderSync();
 
+
+function deleteFilesInOutputFolderSyncTime() {
+  setTimeout(() => {
+    const outputDir = "./output";
+
+    if (!fs.existsSync(outputDir)) {
+      console.log("Output folder does not exist. Nothing to delete.");
+      return;
+    }
+
+    const files = fs.readdirSync(outputDir);
+
+    files.forEach((file) => {
+      const filePath = path.join(outputDir, file);
+      try {
+        fs.unlinkSync(filePath);
+        console.log(`Deleted file: ${file}`);
+      } catch (err) {
+        console.error(`Error deleting file ${file}:`, err);
+      }
+    });
+
+    console.log("All files in the output folder have been deleted.");
+  }, 90000); // Delay of 1 minute 30 seconds (90,000 milliseconds)
+}
+deleteFilesInOutputFolderSyncTime();
 //npx prettier --write app.js
