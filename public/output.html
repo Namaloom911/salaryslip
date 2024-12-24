@@ -74,7 +74,7 @@
             fileList.innerHTML = "<li>Loading...</li>";
             
             try {
-                const response = await fetch(`https://salaryslip-7uoh.onrender.com/output-files-api`, {mode:"no-cors"});
+                const response = await fetch(`/output-files-api`, {mode:"no-cors"});
                 
                 console.log("Prev");
                 if (!response.ok) {
@@ -91,7 +91,7 @@
               data.files.forEach((file) => {
                 const listItem = document.createElement("li");
                 const downloadLink = document.createElement("a");
-                downloadLink.href = `https://salaryslip-7uoh.onrender.com/output/${file}`;
+                downloadLink.href = `/output/${file}`;
                 downloadLink.textContent = file;
                 downloadLink.download = file;
                 listItem.appendChild(downloadLink);
