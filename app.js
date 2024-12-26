@@ -13,8 +13,8 @@ import dotenv from "dotenv"
 
 const corsOptions = {
   origin: '*', // Allow only requests from this origin
-  methods: 'GET,POST', // Allow only these methods
-  allowedHeaders: ['Content-Type', 'Authorization'] // Allow only these headers
+  methods: 'GET,POST', 
+  allowedHeaders: ['Content-Type', 'Authorization'] 
 };
 let absoluteFilePath;
 if (!fs.existsSync("uploads")) {
@@ -40,8 +40,9 @@ console.log({proc: process.env.BACKEND_URL});
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html')); 
 });
-app.listen(4000, () => {
-  console.log("listening to port 4000");
+let port=process.env.PORT || 4000
+app.listen(port, () => {
+  console.log("listening to port ", port);
 });
 
 app.get('/output', (req, res) => {
